@@ -7,9 +7,16 @@ import (
 	"github.com/matryer/is"
 )
 
+func TestGetParam(t *testing.T) {
+	is := is.New(t)
+	req := httptest.NewRequest("", "/users?limit=10", nil)
+	is.Equal(GetParam(req, "limit"), "10")
+	is.Equal(GetParam(req, "nonexistant"), "")
+}
+
 func TestIsJsonRequest(t *testing.T) {
 	is := is.New(t)
-	r := httptest.NewRequest("get", "/users?limit=10", nil)
-	is.Equal(GetParam(r, "limit"), "10")
-	is.Equal(GetParam(r, "nonexistant"), "")
+	req := httptest.NewRequest("", "/", nil)
+	req.Header.Set("Content-Type", "application/json")
+	is.True(IsJsonRequest(req))
 }
